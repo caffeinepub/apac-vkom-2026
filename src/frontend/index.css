@@ -1,0 +1,167 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Bricolage Grotesque";
+  src: url("/assets/fonts/BricolageGrotesque[opsz,wdth,wght].woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src: url("/assets/fonts/PlusJakartaSans[wght].woff2") format("woff2");
+  font-weight: 200 800;
+  font-display: swap;
+}
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+
+    /* Navy/Corporate color palette */
+    --background: 0.97 0.006 250;
+    --foreground: 0.15 0.025 260;
+
+    --card: 1 0 0;
+    --card-foreground: 0.15 0.025 260;
+
+    --popover: 1 0 0;
+    --popover-foreground: 0.15 0.025 260;
+
+    /* Navy primary */
+    --primary: 0.26 0.08 265;
+    --primary-foreground: 0.97 0.005 250;
+
+    /* Light blue secondary */
+    --secondary: 0.93 0.025 255;
+    --secondary-foreground: 0.26 0.08 265;
+
+    --muted: 0.94 0.012 255;
+    --muted-foreground: 0.48 0.04 255;
+
+    /* Gold accent */
+    --accent: 0.82 0.12 72;
+    --accent-foreground: 0.15 0.025 260;
+
+    --destructive: 0.577 0.245 27;
+    --destructive-foreground: 0.97 0 0;
+
+    --border: 0.88 0.015 255;
+    --input: 0.88 0.015 255;
+    --ring: 0.4 0.1 265;
+
+    /* Chart colors */
+    --chart-1: 0.52 0.18 260;
+    --chart-2: 0.62 0.16 190;
+    --chart-3: 0.55 0.16 140;
+    --chart-4: 0.75 0.15 65;
+    --chart-5: 0.6 0.2 30;
+
+    /* Sidebar */
+    --sidebar: 0.17 0.04 265;
+    --sidebar-foreground: 0.9 0.01 250;
+    --sidebar-primary: 0.82 0.12 72;
+    --sidebar-primary-foreground: 0.15 0.025 260;
+    --sidebar-accent: 0.25 0.07 265;
+    --sidebar-accent-foreground: 0.9 0.01 250;
+    --sidebar-border: 0.28 0.06 265;
+    --sidebar-ring: 0.5 0.1 265;
+
+    /* Custom event tokens */
+    --navy: 0.22 0.07 265;
+    --navy-dark: 0.15 0.05 265;
+    --gold: 0.82 0.14 70;
+    --panel-discussion: 0.45 0.14 250;
+    --breakout: 0.6 0.15 50;
+    --mandatory: 0.65 0.16 55;
+    --solution-overview: 0.5 0.14 145;
+    --short-talk: 0.52 0.15 300;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Bricolage Grotesque", system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer utilities {
+  .text-navy {
+    color: oklch(var(--navy));
+  }
+  .bg-navy {
+    background-color: oklch(var(--navy));
+  }
+  .bg-navy-dark {
+    background-color: oklch(var(--navy-dark));
+  }
+  .text-gold {
+    color: oklch(var(--gold));
+  }
+  .bg-gold {
+    background-color: oklch(var(--gold));
+  }
+  .border-gold {
+    border-color: oklch(var(--gold));
+  }
+
+  /* Category badge colors */
+  .badge-panel {
+    background-color: oklch(0.88 0.06 250);
+    color: oklch(0.28 0.1 255);
+    border-color: oklch(0.78 0.1 250);
+  }
+  .badge-breakout {
+    background-color: oklch(0.93 0.08 55);
+    color: oklch(0.4 0.14 50);
+    border-color: oklch(0.82 0.12 55);
+  }
+  .badge-mandatory {
+    background-color: oklch(0.93 0.09 65);
+    color: oklch(0.35 0.12 60);
+    border-color: oklch(0.82 0.13 65);
+  }
+  .badge-solution {
+    background-color: oklch(0.9 0.06 145);
+    color: oklch(0.3 0.1 145);
+    border-color: oklch(0.78 0.1 145);
+  }
+  .badge-short-talk {
+    background-color: oklch(0.9 0.05 300);
+    color: oklch(0.3 0.1 295);
+    border-color: oklch(0.78 0.08 295);
+  }
+
+  /* Course card states */
+  .course-selected {
+    outline: 2px solid oklch(var(--primary));
+    background-color: oklch(0.95 0.025 265);
+  }
+  .course-mandatory {
+    background-color: oklch(0.97 0.015 65);
+    outline: 2px solid oklch(var(--gold));
+  }
+  .course-full {
+    opacity: 0.55;
+  }
+
+  /* Schedule grid */
+  .time-row-label {
+    font-family: "Geist Mono", monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+  }
+}
