@@ -227,16 +227,6 @@ export default function EmployeeForm({
         )}
 
         {/* Info blurb */}
-        <div className="mt-4 flex gap-2 items-start p-3 rounded-lg bg-muted/60 border border-border">
-          <BadgeCheck
-            className="w-4 h-4 mt-0.5 shrink-0"
-            style={{ color: "oklch(var(--solution-overview))" }}
-          />
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            A confirmation email with your selected sessions will be sent to the
-            provided email address after registration.
-          </p>
-        </div>
       </motion.div>
     </div>
   );
