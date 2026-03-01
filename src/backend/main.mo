@@ -5,11 +5,9 @@ import Array "mo:core/Array";
 import Text "mo:core/Text";
 import Time "mo:core/Time";
 import Principal "mo:core/Principal";
+import Int "mo:core/Int";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
-
-
-// migration specification via with clause
 
 actor {
   let accessControlState = AccessControl.initState();
@@ -55,6 +53,24 @@ actor {
       adminAssigned := true;
     };
     true;
+  };
+
+  // NEW: Grant admin to pre-authorized list
+  public shared ({ caller }) func claimPreAuthorizedAdmin() : async Bool {
+    let preAuthorizedAdmins : [Text] = [
+      "7vnp3-r5obz-dzsyu-o6bgq-berzm-ytx3o-cbohj-4ezkx-ada57-yj3cn-cae",
+      "jspcx-xbxvl-7geyf-ysdzv-kg5ya-dvwz2-lis3i-6s7wp-i2ciw-lg6pf-tqe",
+    ];
+    let callerText = caller.toText();
+    let isPreAuthorized = preAuthorizedAdmins.any(
+      func(admin) { admin == callerText }
+    );
+    if (isPreAuthorized and not caller.isAnonymous()) {
+      accessControlState.userRoles.add(caller, #admin);
+      adminAssigned := true;
+      return true;
+    };
+    false;
   };
 
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
@@ -811,7 +827,7 @@ actor {
           case (null) {};
         };
       };
-      csv := csv # registration.employeeId # "," # registration.email # "," # courseIdsText # "," # courseNames # "," # Int.toText(registration.submittedAt) # "\n";
+      csv := csv # registration.employeeId # "," # registration.email # "," # courseIdsText # "," # courseNames # "," # registration.submittedAt.toText() # "\n";
     };
     csv;
   };

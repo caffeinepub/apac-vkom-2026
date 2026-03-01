@@ -142,3 +142,17 @@ export function useSelfGrantAdmin() {
     },
   });
 }
+
+export function useClaimPreAuthorizedAdmin() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async () => {
+      if (!actor) throw new Error("Not connected");
+      return actor.claimPreAuthorizedAdmin();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["isAdmin"] });
+    },
+  });
+}

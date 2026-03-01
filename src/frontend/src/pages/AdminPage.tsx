@@ -49,6 +49,7 @@ import { UserRole } from "../backend.d";
 import { useInternetIdentity } from "../hooks/useInternetIdentity";
 import {
   useAssignUserRole,
+  useClaimPreAuthorizedAdmin,
   useGetAdminStats,
   useGetRegistrations,
   useGetRegistrationsCsv,
@@ -161,21 +162,47 @@ function AccessDeniedScreen({
   onNavigateHome: () => void;
   onLogout: () => void;
 }) {
+  const claimPreAuthorized = useClaimPreAuthorizedAdmin();
   const selfGrantAdmin = useSelfGrantAdmin();
+  const claimMutateAsync = claimPreAuthorized.mutateAsync;
+
+  // Auto-attempt pre-authorized claim on mount
+  useEffect(() => {
+    claimMutateAsync()
+      .then((success) => {
+        if (success) {
+          toast.success("Admin access granted! Refreshing...");
+          setTimeout(() => window.location.reload(), 800);
+        }
+      })
+      .catch(() => {
+        // Not pre-authorized, show the manual options
+      });
+  }, [claimMutateAsync]);
 
   const handleGrantAdmin = async () => {
     try {
+      // First try the pre-authorized path
+      const preAuthSuccess = await claimPreAuthorized.mutateAsync();
+      if (preAuthSuccess) {
+        toast.success("Admin access granted! Refreshing...");
+        setTimeout(() => window.location.reload(), 800);
+        return;
+      }
+      // Fallback to secret-based grant
       const success = await selfGrantAdmin.mutateAsync("APACVKOM2026ADMIN");
       if (success) {
         toast.success("Admin access granted! Refreshing...");
-        setTimeout(() => window.location.reload(), 1000);
+        setTimeout(() => window.location.reload(), 800);
       } else {
-        toast.error("Failed to grant admin access. Invalid secret.");
+        toast.error("Your account is not authorized for admin access.");
       }
     } catch {
       toast.error("Failed to grant admin access. Please try again.");
     }
   };
+
+  const isPending = claimPreAuthorized.isPending || selfGrantAdmin.isPending;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -190,63 +217,77 @@ function AccessDeniedScreen({
           animate={{ opacity: 1 }}
           className="max-w-md w-full text-center"
         >
-          <AlertTriangle className="w-12 h-12 text-destructive mx-auto mb-4" />
-          <h2 className="text-xl font-display font-bold text-foreground mb-2">
-            Access Denied
-          </h2>
-          <p className="text-muted-foreground text-sm mb-4">
-            Your account does not have admin privileges.
-          </p>
-          <div className="bg-muted rounded-lg p-4 mb-6 text-left">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">
-              Your Principal ID
-            </p>
-            <div className="flex items-center gap-2">
-              <code className="text-xs font-mono break-all text-foreground flex-1">
-                {principalId}
-              </code>
-              <button
-                type="button"
-                className="shrink-0 text-xs px-2 py-1 rounded bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
-                onClick={() => {
-                  navigator.clipboard.writeText(principalId);
-                }}
-              >
-                Copy
-              </button>
-            </div>
-            <p className="text-xs text-muted-foreground mt-2">
-              Share this ID with your app administrator to get access.
-            </p>
-          </div>
-          <div className="flex flex-col gap-3">
-            <Button
-              onClick={handleGrantAdmin}
-              disabled={selfGrantAdmin.isPending}
-              className="w-full gap-2 font-semibold"
-            >
-              {selfGrantAdmin.isPending ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Granting Access...
-                </>
-              ) : (
-                <>
-                  <ShieldCheck className="w-4 h-4" />
-                  Grant Admin Access
-                </>
-              )}
-            </Button>
-            <div className="flex gap-3 justify-center">
-              <Button variant="outline" onClick={onNavigateHome}>
-                Go Home
-              </Button>
-              <Button variant="outline" onClick={onLogout}>
-                <LogOut className="w-4 h-4 mr-2" />
-                Log Out
-              </Button>
-            </div>
-          </div>
+          {claimPreAuthorized.isPending ? (
+            <>
+              <Loader2 className="w-12 h-12 animate-spin text-primary mx-auto mb-4" />
+              <h2 className="text-xl font-display font-bold text-foreground mb-2">
+                Checking Access...
+              </h2>
+              <p className="text-muted-foreground text-sm">
+                Verifying your admin privileges.
+              </p>
+            </>
+          ) : (
+            <>
+              <AlertTriangle className="w-12 h-12 text-destructive mx-auto mb-4" />
+              <h2 className="text-xl font-display font-bold text-foreground mb-2">
+                Access Denied
+              </h2>
+              <p className="text-muted-foreground text-sm mb-4">
+                Your account does not have admin privileges.
+              </p>
+              <div className="bg-muted rounded-lg p-4 mb-6 text-left">
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">
+                  Your Principal ID
+                </p>
+                <div className="flex items-center gap-2">
+                  <code className="text-xs font-mono break-all text-foreground flex-1">
+                    {principalId}
+                  </code>
+                  <button
+                    type="button"
+                    className="shrink-0 text-xs px-2 py-1 rounded bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
+                    onClick={() => {
+                      navigator.clipboard.writeText(principalId);
+                    }}
+                  >
+                    Copy
+                  </button>
+                </div>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Share this ID with your app administrator to get access.
+                </p>
+              </div>
+              <div className="flex flex-col gap-3">
+                <Button
+                  onClick={handleGrantAdmin}
+                  disabled={isPending}
+                  className="w-full gap-2 font-semibold"
+                >
+                  {isPending ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Granting Access...
+                    </>
+                  ) : (
+                    <>
+                      <ShieldCheck className="w-4 h-4" />
+                      Grant Admin Access
+                    </>
+                  )}
+                </Button>
+                <div className="flex gap-3 justify-center">
+                  <Button variant="outline" onClick={onNavigateHome}>
+                    Go Home
+                  </Button>
+                  <Button variant="outline" onClick={onLogout}>
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Log Out
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
         </motion.div>
       </div>
     </div>
