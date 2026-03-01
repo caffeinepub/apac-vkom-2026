@@ -31,6 +31,7 @@ import {
   ChevronDown,
   ChevronRight,
   Download,
+  FileSpreadsheet,
   LayoutDashboard,
   Loader2,
   LogIn,
@@ -43,6 +44,7 @@ import {
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+
 import { UserRole } from "../backend.d";
 import { useInternetIdentity } from "../hooks/useInternetIdentity";
 import {
@@ -361,6 +363,46 @@ function AdminDashboard() {
     }
   };
 
+  const handleDownloadExcel = async () => {
+    try {
+      // Build CSV rows (opens natively in Excel)
+      const headers = [
+        "Employee ID",
+        "Email",
+        "Sessions Count",
+        "Submitted At",
+        "Course IDs",
+      ];
+      const escapeCell = (val: string) =>
+        `"${String(val).replace(/"/g, '""')}"`;
+      const rows = registrations.map((reg) => [
+        escapeCell(reg.employeeId),
+        escapeCell(reg.email),
+        String(reg.courseIds.length),
+        escapeCell(
+          new Date(Number(reg.submittedAt) / 1_000_000).toLocaleString(),
+        ),
+        escapeCell(reg.courseIds.join(", ")),
+      ]);
+
+      const csvContent = `\uFEFF${[headers.map(escapeCell), ...rows].map((r) => r.join(",")).join("\r\n")}`;
+
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `apac-vkom-registrations-${new Date().toISOString().split("T")[0]}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      toast.success("Excel/CSV file downloaded successfully");
+    } catch {
+      toast.error("Failed to download Excel file");
+    }
+  };
+
   const handleInitCourses = async () => {
     try {
       await initMutation.mutateAsync();
@@ -422,6 +464,7 @@ function AdminDashboard() {
           </Button>
           <Button
             size="sm"
+            variant="outline"
             onClick={handleDownloadCsv}
             disabled={csvMutation.isPending}
             className="gap-1.5"
@@ -432,6 +475,10 @@ function AdminDashboard() {
               <Download className="w-3.5 h-3.5" />
             )}
             Download CSV
+          </Button>
+          <Button size="sm" onClick={handleDownloadExcel} className="gap-1.5">
+            <FileSpreadsheet className="w-3.5 h-3.5" />
+            Download Excel
           </Button>
         </div>
       </div>

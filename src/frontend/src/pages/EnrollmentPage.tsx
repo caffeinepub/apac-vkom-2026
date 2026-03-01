@@ -211,6 +211,13 @@ export default function EnrollmentPage({ onNavigateAdmin }: Props) {
         email={email}
         employeeId={employeeId}
         onSubmit={handleSubmit}
+        onRemoveCourse={(courseId) => {
+          setSelectedCourseIds((prev) => {
+            const next = new Set(prev);
+            next.delete(courseId);
+            return next;
+          });
+        }}
         isSubmitting={registerMutation.isPending}
         error={registerMutation.error?.message}
       />

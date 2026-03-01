@@ -61,17 +61,97 @@ export default function ConfirmedScheduleModal({
     if (!printAreaRef.current) return;
     setIsCapturing(true);
     try {
-      const html2canvas = (await import("html2canvas")).default;
-      const canvas = await html2canvas(printAreaRef.current, {
-        backgroundColor: "#ffffff",
-        scale: 2,
-        useCORS: true,
-        logging: false,
-      });
-      const link = document.createElement("a");
-      link.download = "APAC-VKOM-2026-Schedule.png";
-      link.href = canvas.toDataURL("image/png");
-      link.click();
+      // Use browser print dialog which allows saving as PDF
+      const printWindow = window.open("", "_blank", "width=800,height=900");
+      if (!printWindow) {
+        // Fallback: trigger browser print on current page
+        window.print();
+        return;
+      }
+      const html = printAreaRef.current.outerHTML;
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="UTF-8" />
+          <title>APAC VKOM 2026 – My Schedule</title>
+          <style>
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { font-family: system-ui, sans-serif; color: #1a1a1a; background: #fff; padding: 20px; }
+            .rounded-xl { border-radius: 12px; }
+            .rounded-lg { border-radius: 8px; }
+            .rounded-full { border-radius: 9999px; }
+            .font-bold { font-weight: 700; }
+            .font-semibold { font-weight: 600; }
+            .text-white { color: #fff; }
+            .text-sm { font-size: 14px; }
+            .text-xs { font-size: 12px; }
+            .text-base { font-size: 16px; }
+            .flex { display: flex; }
+            .flex-wrap { flex-wrap: wrap; }
+            .items-center { align-items: center; }
+            .gap-1 { gap: 4px; }
+            .gap-2 { gap: 8px; }
+            .gap-3 { gap: 12px; }
+            .px-4 { padding-left: 16px; padding-right: 16px; }
+            .py-3 { padding-top: 12px; padding-bottom: 12px; }
+            .px-3 { padding-left: 12px; padding-right: 12px; }
+            .py-1 { padding-top: 4px; padding-bottom: 4px; }
+            .px-1\\.5 { padding-left: 6px; padding-right: 6px; }
+            .py-0\\.5 { padding-top: 2px; padding-bottom: 2px; }
+            .p-3 { padding: 12px; }
+            .mb-1 { margin-bottom: 4px; }
+            .mb-2 { margin-bottom: 8px; }
+            .mb-3 { margin-bottom: 12px; }
+            .mb-4 { margin-bottom: 16px; }
+            .mb-5 { margin-bottom: 20px; }
+            .mt-1 { margin-top: 4px; }
+            .mt-5 { margin-top: 20px; }
+            .pt-3 { padding-top: 12px; }
+            .pb-3 { padding-bottom: 12px; }
+            .border-b { border-bottom: 1px solid #e5e7eb; }
+            .border-t { border-top: 1px solid #e5e7eb; }
+            .border { border: 1px solid #e5e7eb; }
+            .bg-gray-50 { background: #f9fafb; }
+            .bg-amber-50 { background: #fffbeb; }
+            .border-gray-200 { border-color: #e5e7eb; }
+            .border-amber-200 { border-color: #fcd34d; }
+            .text-gray-900 { color: #111827; }
+            .text-gray-500 { color: #6b7280; }
+            .text-gray-400 { color: #9ca3af; }
+            .text-amber-600 { color: #d97706; }
+            .space-y-5 > * + * { margin-top: 20px; }
+            .space-y-2 > * + * { margin-top: 8px; }
+            .flex-1 { flex: 1; }
+            .min-w-0 { min-width: 0; }
+            .shrink-0 { flex-shrink: 0; }
+            .mt-0\\.5 { margin-top: 2px; }
+            .leading-snug { line-height: 1.375; }
+            .text-center { text-align: center; }
+            .h-px { height: 1px; }
+            .uppercase { text-transform: uppercase; }
+            .tracking-widest { letter-spacing: 0.1em; }
+            .w-4 { width: 16px; }
+            .h-4 { height: 16px; }
+            .w-3 { width: 12px; }
+            .h-3 { height: 12px; }
+            .w-5 { width: 20px; }
+            .h-5 { height: 20px; }
+            svg { display: inline-block; vertical-align: middle; }
+            @media print {
+              body { padding: 0; }
+              @page { margin: 1cm; }
+            }
+          </style>
+        </head>
+        <body>${html}</body>
+        </html>
+      `);
+      printWindow.document.close();
+      setTimeout(() => {
+        printWindow.focus();
+        printWindow.print();
+      }, 500);
     } catch {
       // silently ignore
     } finally {
@@ -259,7 +339,7 @@ export default function ConfirmedScheduleModal({
 
             {/* Footer note */}
             <div className="mt-5 pt-3 border-t border-gray-200 text-center text-xs text-gray-400">
-              APAC VKOM 2026 · A confirmation email has been sent to {email}
+              APAC VKOM 2026 · March 6–7, 2026
             </div>
           </div>
         </ScrollArea>

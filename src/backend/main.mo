@@ -9,6 +9,7 @@ import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 
 
+// migration specification via with clause
 
 actor {
   let accessControlState = AccessControl.initState();
@@ -728,10 +729,6 @@ actor {
     #ok;
     #error : Text;
   } {
-    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
-      Runtime.trap("Unauthorized: Only users can register for courses");
-    };
-
     let registrationId = employeeId # "_" # email;
     switch (registrations.get(registrationId)) {
       case (?_) {
