@@ -49,6 +49,7 @@ export interface backendInterface {
     getRegistrations(): Promise<Array<Registration>>;
     getRegistrationsCsv(): Promise<string>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
+    grantAdminBypass(): Promise<void>;
     initializeCourses(): Promise<void>;
     isCallerAdmin(): Promise<boolean>;
     register(employeeId: string, email: string, courseIds: Array<string>): Promise<{
@@ -58,5 +59,7 @@ export interface backendInterface {
         __kind__: "error";
         error: string;
     }>;
+    resetAndGrantAdmin(): Promise<void>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
+    selfGrantAdmin(secret: string): Promise<boolean>;
 }

@@ -128,3 +128,17 @@ export function useAssignUserRole() {
     },
   });
 }
+
+export function useSelfGrantAdmin() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (secret: string) => {
+      if (!actor) throw new Error("Not connected");
+      return actor.selfGrantAdmin(secret);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["isAdmin"] });
+    },
+  });
+}

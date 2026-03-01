@@ -51,6 +51,7 @@ export interface _SERVICE {
   'getRegistrations' : ActorMethod<[], Array<Registration>>,
   'getRegistrationsCsv' : ActorMethod<[], string>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
+  'grantAdminBypass' : ActorMethod<[], undefined>,
   'initializeCourses' : ActorMethod<[], undefined>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'register' : ActorMethod<
@@ -58,7 +59,9 @@ export interface _SERVICE {
     { 'ok' : null } |
       { 'error' : string }
   >,
+  'resetAndGrantAdmin' : ActorMethod<[], undefined>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
+  'selfGrantAdmin' : ActorMethod<[string], boolean>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

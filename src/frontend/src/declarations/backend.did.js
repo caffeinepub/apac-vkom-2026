@@ -56,6 +56,7 @@ export const idlService = IDL.Service({
       [IDL.Opt(UserProfile)],
       ['query'],
     ),
+  'grantAdminBypass' : IDL.Func([], [], []),
   'initializeCourses' : IDL.Func([], [], []),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'register' : IDL.Func(
@@ -63,7 +64,9 @@ export const idlService = IDL.Service({
       [IDL.Variant({ 'ok' : IDL.Null, 'error' : IDL.Text })],
       [],
     ),
+  'resetAndGrantAdmin' : IDL.Func([], [], []),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+  'selfGrantAdmin' : IDL.Func([IDL.Text], [IDL.Bool], []),
 });
 
 export const idlInitArgs = [];
@@ -117,6 +120,7 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Opt(UserProfile)],
         ['query'],
       ),
+    'grantAdminBypass' : IDL.Func([], [], []),
     'initializeCourses' : IDL.Func([], [], []),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'register' : IDL.Func(
@@ -124,7 +128,9 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Variant({ 'ok' : IDL.Null, 'error' : IDL.Text })],
         [],
       ),
+    'resetAndGrantAdmin' : IDL.Func([], [], []),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+    'selfGrantAdmin' : IDL.Func([IDL.Text], [IDL.Bool], []),
   });
 };
 

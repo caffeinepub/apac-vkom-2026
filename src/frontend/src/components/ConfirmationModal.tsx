@@ -59,7 +59,10 @@ export default function ConfirmationModal({
 
   return (
     <Dialog open={open} onOpenChange={(v) => !isSubmitting && !v && onClose()}>
-      <DialogContent className="max-w-lg w-full max-h-[90vh] flex flex-col p-0 overflow-hidden">
+      <DialogContent
+        className="max-w-lg w-full max-h-[90vh] flex flex-col p-0 overflow-hidden"
+        style={{ display: "flex", flexDirection: "column" }}
+      >
         {/* Header */}
         <div
           className="px-6 pt-6 pb-4 border-b border-border"
@@ -94,7 +97,7 @@ export default function ConfirmationModal({
         </div>
 
         {/* Course list */}
-        <ScrollArea className="flex-1 px-6 py-4">
+        <ScrollArea className="flex-1 min-h-0 px-6 py-4">
           <div className="space-y-2">
             {sortedCourses.map((course) => {
               const catClass = getCategoryColor(
@@ -156,7 +159,7 @@ export default function ConfirmationModal({
         )}
 
         {/* Footer */}
-        <DialogFooter className="px-6 py-4 border-t border-border gap-2">
+        <DialogFooter className="px-6 py-4 border-t border-border gap-2 shrink-0">
           <Button
             variant="outline"
             onClick={onClose}

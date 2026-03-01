@@ -132,6 +132,7 @@ export interface backendInterface {
     getRegistrations(): Promise<Array<Registration>>;
     getRegistrationsCsv(): Promise<string>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
+    grantAdminBypass(): Promise<void>;
     initializeCourses(): Promise<void>;
     isCallerAdmin(): Promise<boolean>;
     register(employeeId: string, email: string, courseIds: Array<string>): Promise<{
@@ -141,7 +142,9 @@ export interface backendInterface {
         __kind__: "error";
         error: string;
     }>;
+    resetAndGrantAdmin(): Promise<void>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
+    selfGrantAdmin(secret: string): Promise<boolean>;
 }
 import type { UserProfile as _UserProfile, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
@@ -272,6 +275,20 @@ export class Backend implements backendInterface {
             return from_candid_opt_n3(this._uploadFile, this._downloadFile, result);
         }
     }
+    async grantAdminBypass(): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.grantAdminBypass();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.grantAdminBypass();
+            return result;
+        }
+    }
     async initializeCourses(): Promise<void> {
         if (this.processError) {
             try {
@@ -320,6 +337,20 @@ export class Backend implements backendInterface {
             return from_candid_variant_n6(this._uploadFile, this._downloadFile, result);
         }
     }
+    async resetAndGrantAdmin(): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.resetAndGrantAdmin();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.resetAndGrantAdmin();
+            return result;
+        }
+    }
     async saveCallerUserProfile(arg0: UserProfile): Promise<void> {
         if (this.processError) {
             try {
@@ -331,6 +362,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.saveCallerUserProfile(arg0);
+            return result;
+        }
+    }
+    async selfGrantAdmin(arg0: string): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.selfGrantAdmin(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.selfGrantAdmin(arg0);
             return result;
         }
     }

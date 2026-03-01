@@ -5,13 +5,13 @@ import { useGetCourses, useRegister } from "../hooks/useQueries";
 import { isFull } from "../utils/courseUtils";
 
 import ConfirmationModal from "../components/ConfirmationModal";
+import ConfirmedScheduleModal from "../components/ConfirmedScheduleModal";
 import CourseCalendar from "../components/CourseCalendar";
 import CourseSelectionCart from "../components/CourseSelectionCart";
 import EmployeeForm from "../components/EmployeeForm";
 import HeroBanner from "../components/HeroBanner";
-import SuccessScreen from "../components/SuccessScreen";
 
-type Step = "details" | "select" | "success";
+type Step = "details" | "select";
 
 interface Props {
   onNavigateAdmin: () => void;
@@ -25,6 +25,7 @@ export default function EnrollmentPage({ onNavigateAdmin }: Props) {
     new Set(),
   );
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showConfirmedSchedule, setShowConfirmedSchedule] = useState(false);
 
   const { data: courses = [], isLoading: coursesLoading } = useGetCourses();
   const registerMutation = useRegister();
@@ -67,10 +68,19 @@ export default function EnrollmentPage({ onNavigateAdmin }: Props) {
         courseIds: Array.from(selectedCourseIds),
       });
       setShowConfirmModal(false);
-      setStep("success");
+      setShowConfirmedSchedule(true);
     } catch {
       // error handled in modal
     }
+  };
+
+  const handleCloseConfirmedSchedule = () => {
+    setShowConfirmedSchedule(false);
+    // Reset form so another employee can register
+    setStep("details");
+    setEmployeeId("");
+    setEmail("");
+    setSelectedCourseIds(new Set());
   };
 
   return (
@@ -190,31 +200,10 @@ export default function EnrollmentPage({ onNavigateAdmin }: Props) {
               />
             </motion.div>
           )}
-
-          {step === "success" && (
-            <motion.div
-              key="success"
-              initial={{ opacity: 0, scale: 0.97 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.35 }}
-            >
-              <SuccessScreen
-                email={email}
-                employeeId={employeeId}
-                selectedCourses={selectedCourses}
-                onStartOver={() => {
-                  setStep("details");
-                  setEmployeeId("");
-                  setEmail("");
-                  setSelectedCourseIds(new Set());
-                }}
-              />
-            </motion.div>
-          )}
         </AnimatePresence>
       </main>
 
-      {/* Confirmation Modal */}
+      {/* Confirmation Modal (review before submit) */}
       <ConfirmationModal
         open={showConfirmModal}
         onClose={() => setShowConfirmModal(false)}
@@ -224,6 +213,15 @@ export default function EnrollmentPage({ onNavigateAdmin }: Props) {
         onSubmit={handleSubmit}
         isSubmitting={registerMutation.isPending}
         error={registerMutation.error?.message}
+      />
+
+      {/* Confirmed Schedule Modal (shown after successful submission) */}
+      <ConfirmedScheduleModal
+        open={showConfirmedSchedule}
+        onClose={handleCloseConfirmedSchedule}
+        email={email}
+        employeeId={employeeId}
+        selectedCourses={selectedCourses}
       />
 
       {/* Footer */}

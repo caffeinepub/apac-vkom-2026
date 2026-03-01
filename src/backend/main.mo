@@ -8,6 +8,8 @@ import Principal "mo:core/Principal";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 
+
+
 actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
@@ -39,12 +41,23 @@ actor {
     email : Text;
   };
 
+  var adminAssigned = false;
+
   let courses = Map.empty<Text, Course>();
   let registrations = Map.empty<Text, Registration>();
   let userProfiles = Map.empty<Principal, UserProfile>();
 
+  public shared ({ caller }) func selfGrantAdmin(secret : Text) : async Bool {
+    if (secret != "APACVKOM2026ADMIN") { return false };
+    if (not caller.isAnonymous()) {
+      accessControlState.userRoles.add(caller, #admin);
+      adminAssigned := true;
+    };
+    true;
+  };
+
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can access profiles");
     };
     userProfiles.get(caller);
@@ -58,14 +71,29 @@ actor {
   };
 
   public shared ({ caller }) func saveCallerUserProfile(profile : UserProfile) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can save profiles");
     };
     userProfiles.add(caller, profile);
   };
 
+  public shared ({ caller }) func grantAdminBypass() : async () {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Only admins can grant admin privileges");
+    };
+    AccessControl.assignRole(accessControlState, caller, caller, #admin);
+  };
+
+  public shared ({ caller }) func resetAndGrantAdmin() : async () {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Only admins can reset admin assignment");
+    };
+    adminAssigned := false;
+    AccessControl.assignRole(accessControlState, caller, caller, #admin);
+  };
+
   public shared ({ caller }) func initializeCourses() : async () {
-    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Only admins can initialize courses");
     };
 
@@ -700,6 +728,10 @@ actor {
     #ok;
     #error : Text;
   } {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
+      Runtime.trap("Unauthorized: Only users can register for courses");
+    };
+
     let registrationId = employeeId # "_" # email;
     switch (registrations.get(registrationId)) {
       case (?_) {
@@ -755,14 +787,14 @@ actor {
   };
 
   public query ({ caller }) func getRegistrations() : async [Registration] {
-    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Only admins can view all registrations");
     };
     registrations.values().toArray();
   };
 
   public query ({ caller }) func getRegistrationsCsv() : async Text {
-    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Only admins can export registrations");
     };
 
@@ -793,7 +825,7 @@ actor {
   };
 
   public query ({ caller }) func getAdminStats() : async AdminStats {
-    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Only admins can view statistics");
     };
 
