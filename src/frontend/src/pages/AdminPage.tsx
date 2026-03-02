@@ -639,6 +639,9 @@ function AdminDashboard() {
         </CardContent>
       </Card>
 
+      {/* Course ID Legend */}
+      <CourseIdLegend />
+
       {/* Registrations table */}
       <Card className="shadow-card">
         <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
@@ -822,6 +825,335 @@ function AdminDashboard() {
     </main>
   );
 }
+
+// ─── Course ID Legend Data ────────────────────────────────────────────────────
+
+interface CourseLegendEntry {
+  id: string;
+  title: string;
+  room: string;
+  date: string;
+  time: string;
+  mandatory?: boolean;
+}
+
+const REGULAR_SESSIONS: CourseLegendEntry[] = [
+  {
+    id: "c00",
+    title: "Kickoff, Keynote and Management Presentations",
+    room: "ICC",
+    date: "Mar 6",
+    time: "9:30 AM–1:00 PM",
+    mandatory: true,
+  },
+  {
+    id: "c01",
+    title: "Cloud Extensions",
+    room: "ICC",
+    date: "Mar 6",
+    time: "2:30–3:30 PM",
+    mandatory: true,
+  },
+  {
+    id: "c02",
+    title: "SAP S/4 Migration/Readiness with Vistex V/4",
+    room: "ICC",
+    date: "Mar 6",
+    time: "3:30–4:30 PM",
+  },
+  {
+    id: "c03",
+    title: "Industry Panel Discussion: CPG - Food Services",
+    room: "IRIS 1",
+    date: "Mar 6",
+    time: "3:30–4:30 PM",
+  },
+  {
+    id: "c04",
+    title: "Industry Panel Discussion: Life Sciences",
+    room: "IRIS 2",
+    date: "Mar 6",
+    time: "3:30–4:30 PM",
+  },
+  {
+    id: "c05",
+    title: "Industry Panel Discussion: Wholesale distribution",
+    room: "IRIS 1",
+    date: "Mar 7",
+    time: "1:00–2:00 PM",
+  },
+  {
+    id: "c06",
+    title: "Industry Trend and Product Roadmap: Consumer Products",
+    room: "IRIS 1",
+    date: "Mar 7",
+    time: "2:00–3:00 PM",
+  },
+  {
+    id: "c07",
+    title: "Retroactive Pricing for Automotive Industry",
+    room: "IRIS 1",
+    date: "Mar 7",
+    time: "3:00–4:00 PM",
+  },
+  {
+    id: "c08",
+    title: "Vistex Price Retroactive and Claims Processing",
+    room: "IRIS 1",
+    date: "Mar 7",
+    time: "4:00–5:00 PM",
+  },
+  {
+    id: "c09",
+    title: "Vistex Pricing with Price Review",
+    room: "IRIS 2",
+    date: "Mar 7",
+    time: "1:00–2:00 PM",
+  },
+  {
+    id: "c10",
+    title: "Agile Project Methodology for APAC region",
+    room: "IRIS 2",
+    date: "Mar 7",
+    time: "2:00–3:00 PM",
+  },
+  {
+    id: "c11",
+    title: "RevFlo for Vistex Applications Vistex TPM",
+    room: "IRIS 2",
+    date: "Mar 7",
+    time: "3:00–4:00 PM",
+  },
+  {
+    id: "c12",
+    title: "Agri Farm and Grower Management",
+    room: "IRIS 2",
+    date: "Mar 7",
+    time: "4:00–5:00 PM",
+  },
+  {
+    id: "c13",
+    title: "Vistex Vendor Chargebacks",
+    room: "IRIS 3",
+    date: "Mar 7",
+    time: "2:00–3:00 PM",
+  },
+  {
+    id: "c14",
+    title: "Vistex Rebates",
+    room: "IRIS 3",
+    date: "Mar 7",
+    time: "3:00–4:00 PM",
+  },
+  {
+    id: "c15",
+    title: "Vistex TPM / Planning Solutions",
+    room: "IRIS 3",
+    date: "Mar 7",
+    time: "4:00–5:00 PM",
+  },
+  {
+    id: "c16",
+    title: "Next Gen ABAP (new ABAP syntaxes)",
+    room: "IRIS 3",
+    date: "Mar 7",
+    time: "1:00–2:00 PM",
+  },
+];
+
+const SHORT_TALKS: CourseLegendEntry[] = [
+  {
+    id: "s101",
+    title: "Business AI Data Flow",
+    room: "Booth 1",
+    date: "Mar 7",
+    time: "1:00–1:30 PM",
+  },
+  {
+    id: "s102",
+    title: "ETM (Solution)",
+    room: "Booth 1",
+    date: "Mar 7",
+    time: "1:30–2:00 PM",
+  },
+  {
+    id: "s103",
+    title: "Business AI Data Flow",
+    room: "Booth 1",
+    date: "Mar 7",
+    time: "2:00–2:30 PM",
+  },
+  {
+    id: "s104",
+    title: "ViZi Self Service / Policies (AI)",
+    room: "Booth 1",
+    date: "Mar 7",
+    time: "3:00–3:30 PM",
+  },
+  {
+    id: "s105",
+    title: "Business AI Data Flow",
+    room: "Booth 1",
+    date: "Mar 7",
+    time: "3:30–4:00 PM",
+  },
+  {
+    id: "s106",
+    title: "ETM (Solution)",
+    room: "Booth 1",
+    date: "Mar 7",
+    time: "4:00–4:30 PM",
+  },
+  {
+    id: "s107",
+    title: "Business AI Data Flow",
+    room: "Booth 1",
+    date: "Mar 7",
+    time: "4:30–5:00 PM",
+  },
+  {
+    id: "s201",
+    title: "Business AI - Assistant",
+    room: "Booth 2",
+    date: "Mar 7",
+    time: "1:00–1:30 PM",
+  },
+  {
+    id: "s202",
+    title: "Portals",
+    room: "Booth 2",
+    date: "Mar 7",
+    time: "1:30–2:00 PM",
+  },
+  {
+    id: "s203",
+    title: "Business AI - Assistant",
+    room: "Booth 2",
+    date: "Mar 7",
+    time: "2:00–2:30 PM",
+  },
+  {
+    id: "s204",
+    title: "Business AI - Assistant",
+    room: "Booth 2",
+    date: "Mar 7",
+    time: "3:00–3:30 PM",
+  },
+  {
+    id: "s205",
+    title: "Portals",
+    room: "Booth 2",
+    date: "Mar 7",
+    time: "3:30–4:00 PM",
+  },
+  {
+    id: "s206",
+    title: "ViZi Self Service / Policies (AI)",
+    room: "Booth 2",
+    date: "Mar 7",
+    time: "4:00–4:30 PM",
+  },
+  {
+    id: "s207",
+    title: "Business AI - Assistant",
+    room: "Booth 2",
+    date: "Mar 7",
+    time: "4:30–5:00 PM",
+  },
+];
+
+function LegendRow({ entry }: { entry: CourseLegendEntry }) {
+  return (
+    <div className="flex items-start gap-2 py-1.5 border-b border-border/50 last:border-0">
+      <span className="font-mono text-xs px-1.5 py-0.5 rounded bg-secondary text-secondary-foreground shrink-0 mt-0.5">
+        {entry.id}
+      </span>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <span className="text-xs font-semibold text-foreground leading-snug">
+            {entry.title}
+          </span>
+          {entry.mandatory && (
+            <Badge
+              variant="destructive"
+              className="text-[10px] px-1 py-0 h-4 leading-none"
+            >
+              Mandatory
+            </Badge>
+          )}
+        </div>
+        <span className="text-[11px] text-muted-foreground">
+          {entry.room} · {entry.date} · {entry.time}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function CourseIdLegend() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+      <Card className="shadow-card">
+        <CardHeader className="pb-3 border-b border-border">
+          <CollapsibleTrigger asChild>
+            <button
+              type="button"
+              className="flex items-center justify-between w-full group"
+            >
+              <div className="flex items-center gap-2">
+                <BookOpen className="w-4 h-4 text-muted-foreground" />
+                <CardTitle className="text-base font-display">
+                  Course ID Legend
+                </CardTitle>
+                <Badge variant="secondary" className="font-mono text-xs">
+                  {REGULAR_SESSIONS.length + SHORT_TALKS.length} sessions
+                </Badge>
+              </div>
+              <ChevronDown
+                className={`w-4 h-4 text-muted-foreground transition-transform duration-200 ${isOpen ? "rotate-180" : "rotate-0"}`}
+              />
+            </button>
+          </CollapsibleTrigger>
+        </CardHeader>
+        <CollapsibleContent>
+          <CardContent className="pt-4 pb-5">
+            {/* Regular Sessions */}
+            <div className="mb-5">
+              <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-2">
+                <span className="h-px flex-1 bg-border" />
+                Regular Sessions (c00–c16)
+                <span className="h-px flex-1 bg-border" />
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+                {REGULAR_SESSIONS.map((entry) => (
+                  <LegendRow key={entry.id} entry={entry} />
+                ))}
+              </div>
+            </div>
+
+            {/* Short Talks */}
+            <div>
+              <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-2">
+                <span className="h-px flex-1 bg-border" />
+                Short Talks (s101–s207)
+                <span className="h-px flex-1 bg-border" />
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+                {SHORT_TALKS.map((entry) => (
+                  <LegendRow key={entry.id} entry={entry} />
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </CollapsibleContent>
+      </Card>
+    </Collapsible>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 function StatCard({
   title,

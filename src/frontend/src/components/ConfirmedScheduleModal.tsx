@@ -16,7 +16,6 @@ import {
   UserCircle,
   X,
 } from "lucide-react";
-import { utils as xlsxUtils, writeFile as xlsxWriteFile } from "xlsx";
 import type { Course } from "../backend.d";
 import {
   formatDate,
@@ -53,35 +52,39 @@ export default function ConfirmedScheduleModal({
   }
 
   const handleDownloadSpreadsheet = () => {
-    const rows = sortedCourses.map((course) => ({
-      Date: formatDate(course.date),
-      "Start Time": formatTime(course.startTime),
-      "End Time": formatTime(course.endTime),
-      Title: course.title,
-      Room: course.room,
-      Category: getCategoryLabel(course.category),
-      Mandatory: course.isMandatory ? "Yes" : "No",
-      "Employee ID": employeeId,
-      Email: email,
-    }));
-
-    const worksheet = xlsxUtils.json_to_sheet(rows);
-    // Set column widths for readability
-    worksheet["!cols"] = [
-      { wch: 18 }, // Date
-      { wch: 12 }, // Start Time
-      { wch: 12 }, // End Time
-      { wch: 55 }, // Title
-      { wch: 18 }, // Room
-      { wch: 22 }, // Category
-      { wch: 10 }, // Mandatory
-      { wch: 16 }, // Employee ID
-      { wch: 32 }, // Email
+    const escapeCell = (val: string) => `"${String(val).replace(/"/g, '""')}"`;
+    const headers = [
+      "Date",
+      "Start Time",
+      "End Time",
+      "Title",
+      "Room",
+      "Category",
+      "Mandatory",
+      "Employee ID",
+      "Email",
     ];
-
-    const workbook = xlsxUtils.book_new();
-    xlsxUtils.book_append_sheet(workbook, worksheet, "My Schedule");
-    xlsxWriteFile(workbook, `APAC-VKOM-2026-Schedule-${employeeId}.xlsx`);
+    const rows = sortedCourses.map((course) => [
+      escapeCell(formatDate(course.date)),
+      escapeCell(formatTime(course.startTime)),
+      escapeCell(formatTime(course.endTime)),
+      escapeCell(course.title),
+      escapeCell(course.room),
+      escapeCell(getCategoryLabel(course.category)),
+      escapeCell(course.isMandatory ? "Yes" : "No"),
+      escapeCell(employeeId),
+      escapeCell(email),
+    ]);
+    const csvContent = `\uFEFF${[headers.map(escapeCell), ...rows].map((r) => r.join(",")).join("\r\n")}`;
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `APAC-VKOM-2026-Schedule-${employeeId}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   return (

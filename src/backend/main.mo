@@ -55,7 +55,6 @@ actor {
     true;
   };
 
-  // NEW: Grant admin to pre-authorized list
   public shared ({ caller }) func claimPreAuthorizedAdmin() : async Bool {
     let preAuthorizedAdmins : [Text] = [
       "7vnp3-r5obz-dzsyu-o6bgq-berzm-ytx3o-cbohj-4ezkx-ada57-yj3cn-cae",
@@ -115,7 +114,18 @@ actor {
     };
 
     let initialCourses = [
-      // March 6, 2026
+      {
+        id = "c00";
+        title = "Kickoff, Keynote and Management Presentations";
+        room = "ICC";
+        date = "2026-03-06";
+        startTime = "09:30";
+        endTime = "13:00";
+        category = "Breakout";
+        capacity = 9999;
+        enrolledCount = 0;
+        isMandatory = true;
+      },
       {
         id = "c01";
         title = "Cloud Extensions";
@@ -346,7 +356,7 @@ actor {
       },
       {
         id = "s104";
-        title = "ETM (Solutions)";
+        title = "ViZi Self Service / Policies (AI)";
         room = "Booth 1";
         date = "2026-03-07";
         startTime = "15:00";
@@ -370,11 +380,23 @@ actor {
       },
       {
         id = "s106";
-        title = "Business AI Data Flow";
+        title = "ETM (Solution)";
         room = "Booth 1";
         date = "2026-03-07";
         startTime = "16:00";
         endTime = "16:30";
+        category = "Short Talk";
+        capacity = 50;
+        enrolledCount = 0;
+        isMandatory = false;
+      },
+      {
+        id = "s107";
+        title = "Business AI Data Flow";
+        room = "Booth 1";
+        date = "2026-03-07";
+        startTime = "16:30";
+        endTime = "17:00";
         category = "Short Talk";
         capacity = 50;
         enrolledCount = 0;
@@ -442,7 +464,7 @@ actor {
       },
       {
         id = "s206";
-        title = "Business AI - Assistant";
+        title = "ViZi Self Service / Policies (AI)";
         room = "Booth 2";
         date = "2026-03-07";
         startTime = "16:00";
@@ -453,276 +475,12 @@ actor {
         isMandatory = false;
       },
       {
-        id = "s301";
-        title = "Business AI - Price Guidance";
-        room = "Booth 3";
+        id = "s207";
+        title = "Business AI - Assistant";
+        room = "Booth 2";
         date = "2026-03-07";
-        startTime = "13:00";
-        endTime = "13:30";
-        category = "Short Talk";
-        capacity = 50;
-        enrolledCount = 0;
-        isMandatory = false;
-      },
-      {
-        id = "s302";
-        title = "Planx";
-        room = "Booth 3";
-        date = "2026-03-07";
-        startTime = "13:30";
-        endTime = "14:00";
-        category = "Short Talk";
-        capacity = 50;
-        enrolledCount = 0;
-        isMandatory = false;
-      },
-      {
-        id = "s303";
-        title = "Business AI - Price Guidance";
-        room = "Booth 3";
-        date = "2026-03-07";
-        startTime = "14:00";
-        endTime = "14:30";
-        category = "Short Talk";
-        capacity = 50;
-        enrolledCount = 0;
-        isMandatory = false;
-      },
-      {
-        id = "s304";
-        title = "Planx";
-        room = "Booth 3";
-        date = "2026-03-07";
-        startTime = "15:00";
-        endTime = "15:30";
-        category = "Short Talk";
-        capacity = 50;
-        enrolledCount = 0;
-        isMandatory = false;
-      },
-      {
-        id = "s305";
-        title = "Business AI - Price Guidance";
-        room = "Booth 3";
-        date = "2026-03-07";
-        startTime = "15:30";
-        endTime = "16:00";
-        category = "Short Talk";
-        capacity = 50;
-        enrolledCount = 0;
-        isMandatory = false;
-      },
-      {
-        id = "s306";
-        title = "Planx";
-        room = "Booth 3";
-        date = "2026-03-07";
-        startTime = "16:00";
-        endTime = "16:30";
-        category = "Short Talk";
-        capacity = 50;
-        enrolledCount = 0;
-        isMandatory = false;
-      },
-      {
-        id = "s401";
-        title = "Work Manager";
-        room = "Booth 4";
-        date = "2026-03-07";
-        startTime = "13:00";
-        endTime = "13:30";
-        category = "Short Talk";
-        capacity = 50;
-        enrolledCount = 0;
-        isMandatory = false;
-      },
-      {
-        id = "s402";
-        title = "ViZi Self Service / Policies (AI)";
-        room = "Booth 4";
-        date = "2026-03-07";
-        startTime = "13:30";
-        endTime = "14:00";
-        category = "Short Talk";
-        capacity = 50;
-        enrolledCount = 0;
-        isMandatory = false;
-      },
-      {
-        id = "s403";
-        title = "Work Manager";
-        room = "Booth 4";
-        date = "2026-03-07";
-        startTime = "14:00";
-        endTime = "14:30";
-        category = "Short Talk";
-        capacity = 50;
-        enrolledCount = 0;
-        isMandatory = false;
-      },
-      {
-        id = "s404";
-        title = "Business AI - Price Guidance";
-        room = "Booth 4";
-        date = "2026-03-07";
-        startTime = "15:00";
-        endTime = "15:30";
-        category = "Short Talk";
-        capacity = 50;
-        enrolledCount = 0;
-        isMandatory = false;
-      },
-      {
-        id = "s405";
-        title = "ViZi Self Service / Policies (AI)";
-        room = "Booth 4";
-        date = "2026-03-07";
-        startTime = "15:30";
-        endTime = "16:00";
-        category = "Short Talk";
-        capacity = 50;
-        enrolledCount = 0;
-        isMandatory = false;
-      },
-      {
-        id = "s406";
-        title = "Work Manager";
-        room = "Booth 4";
-        date = "2026-03-07";
-        startTime = "16:00";
-        endTime = "16:30";
-        category = "Short Talk";
-        capacity = 50;
-        enrolledCount = 0;
-        isMandatory = false;
-      },
-      {
-        id = "s501";
-        title = "RevFlo - Agentic AI";
-        room = "Booth 5";
-        date = "2026-03-07";
-        startTime = "13:00";
-        endTime = "13:30";
-        category = "Short Talk";
-        capacity = 50;
-        enrolledCount = 0;
-        isMandatory = false;
-      },
-      {
-        id = "s502";
-        title = "Agri Innovations (GIS maps, Route optimization, Digital Field Dairy)";
-        room = "Booth 5";
-        date = "2026-03-07";
-        startTime = "13:30";
-        endTime = "14:00";
-        category = "Short Talk";
-        capacity = 50;
-        enrolledCount = 0;
-        isMandatory = false;
-      },
-      {
-        id = "s503";
-        title = "Agri Analytics and Grower Portals";
-        room = "Booth 5";
-        date = "2026-03-07";
-        startTime = "14:00";
-        endTime = "14:30";
-        category = "Short Talk";
-        capacity = 50;
-        enrolledCount = 0;
-        isMandatory = false;
-      },
-      {
-        id = "s504";
-        title = "Agri Innovations (GIS maps, Route optimization, Digital Field Dairy)";
-        room = "Booth 5";
-        date = "2026-03-07";
-        startTime = "15:00";
-        endTime = "15:30";
-        category = "Short Talk";
-        capacity = 50;
-        enrolledCount = 0;
-        isMandatory = false;
-      },
-      {
-        id = "s505";
-        title = "Agri Analytics and Grower Portals";
-        room = "Booth 5";
-        date = "2026-03-07";
-        startTime = "15:30";
-        endTime = "16:00";
-        category = "Short Talk";
-        capacity = 50;
-        enrolledCount = 0;
-        isMandatory = false;
-      },
-      {
-        id = "s506";
-        title = "RevFlo - Agentic AI";
-        room = "Booth 5";
-        date = "2026-03-07";
-        startTime = "16:00";
-        endTime = "16:30";
-        category = "Short Talk";
-        capacity = 50;
-        enrolledCount = 0;
-        isMandatory = false;
-      },
-      {
-        id = "s601";
-        title = "Channel MDF";
-        room = "Booth 6";
-        date = "2026-03-07";
-        startTime = "13:00";
-        endTime = "13:30";
-        category = "Short Talk";
-        capacity = 50;
-        enrolledCount = 0;
-        isMandatory = false;
-      },
-      {
-        id = "s602";
-        title = "PlanX";
-        room = "Booth 6";
-        date = "2026-03-07";
-        startTime = "14:00";
-        endTime = "14:30";
-        category = "Short Talk";
-        capacity = 50;
-        enrolledCount = 0;
-        isMandatory = false;
-      },
-      {
-        id = "s603";
-        title = "Channel MDF";
-        room = "Booth 6";
-        date = "2026-03-07";
-        startTime = "15:00";
-        endTime = "15:30";
-        category = "Short Talk";
-        capacity = 50;
-        enrolledCount = 0;
-        isMandatory = false;
-      },
-      {
-        id = "s604";
-        title = "Work Manager";
-        room = "Booth 6";
-        date = "2026-03-07";
-        startTime = "15:30";
-        endTime = "16:00";
-        category = "Short Talk";
-        capacity = 50;
-        enrolledCount = 0;
-        isMandatory = false;
-      },
-      {
-        id = "s605";
-        title = "RevFlo - Agri Analytics and Grower Portals";
-        room = "Booth 6";
-        date = "2026-03-07";
-        startTime = "16:00";
-        endTime = "16:30";
+        startTime = "16:30";
+        endTime = "17:00";
         category = "Short Talk";
         capacity = 50;
         enrolledCount = 0;
@@ -738,6 +496,9 @@ actor {
   };
 
   public query ({ caller }) func getCourses() : async [Course] {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
+      Runtime.trap("Unauthorized: Only authenticated users can view courses");
+    };
     courses.values().toArray();
   };
 
@@ -745,6 +506,10 @@ actor {
     #ok;
     #error : Text;
   } {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
+      Runtime.trap("Unauthorized: Only authenticated users can register for courses");
+    };
+
     let registrationId = employeeId # "_" # email;
     switch (registrations.get(registrationId)) {
       case (?_) {

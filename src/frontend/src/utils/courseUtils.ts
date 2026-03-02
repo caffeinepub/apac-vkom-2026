@@ -71,19 +71,8 @@ export function getUniqueTimeSlots(courses: Course[]): string[] {
 export function getUniqueRooms(courses: Course[]): string[] {
   const rooms = new Set(courses.map((c) => c.room));
   return Array.from(rooms).sort((a, b) => {
-    // Sort: ICC first, then IRIS 1, IRIS 2, IRIS 3, then Booth 1-6
-    const order = [
-      "ICC",
-      "IRIS 1",
-      "IRIS 2",
-      "IRIS 3",
-      "Booth 1",
-      "Booth 2",
-      "Booth 3",
-      "Booth 4",
-      "Booth 5",
-      "Booth 6",
-    ];
+    // Sort: ICC first, then IRIS 1, IRIS 2, IRIS 3, then Booth 1-2
+    const order = ["ICC", "IRIS 1", "IRIS 2", "IRIS 3", "Booth 1", "Booth 2"];
     const ai = order.indexOf(a);
     const bi = order.indexOf(b);
     if (ai === -1 && bi === -1) return a.localeCompare(b);
